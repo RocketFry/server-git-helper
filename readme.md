@@ -14,7 +14,7 @@ First of all, copy the sgh.sh into your /home directory and you are ready to go:
    sh sgh.sh delete --alias project-alias
    ```
 
-3. Delete an alias and associated repo files:
+3. Delete alias and associated SSH key
    ```bash
    sh sgh.sh clean --alias project-alias
    ```
