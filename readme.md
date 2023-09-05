@@ -8,9 +8,33 @@ SGH (Server Git Helper) is a utility script engineered to automate the cumbersom
 
 ### Initial Setup
 
-#### Step 1: Copy the `sgh.sh` Contents
+#### Option 1: Automated Setup (Recommended)
 
-Begin by copying the contents of the `sgh.sh` script, which can be obtained from its original source.
+You can use `curl` or `wget` to download `sgh.sh` directly to your server's home directory. Here's how:
+
+Using `curl`:
+
+```bash
+curl -o ~/sgh https://raw.githubusercontent.com/RocketFry/server-git-helper/main/sgh.sh
+```
+
+Or using `wget`:
+
+```bash
+wget -O ~/sgh https://raw.githubusercontent.com/RocketFry/server-git-helper/main/sgh.sh
+```
+
+Then, make the script executable:
+
+```bash
+chmod +x ~/sgh
+```
+
+#### Option 2: Manual Setup
+
+If you prefer not to use `curl` or `wget`, you can manually copy the content as described in the original guide.
+
+1. **Copy the `sgh.sh` Contents**: Copy the contents of `sgh.sh`, which can be obtained from its original source.
 
 #### Step 2: Create a File in Your Server's Home Directory
 
@@ -48,6 +72,11 @@ chmod +x ~/sgh
 You're now ready to use SGH. Here are some example commands to help you get started:
 
 ##### To Create an SSH Profile
+
+```bash
+~/sgh create --alias [alias-name] --repo [repo-url]
+```
+Example:
 
 ```bash
 ~/sgh create --alias sgh-example --repo git@github.com:RocketFry/server-git-helper.git
