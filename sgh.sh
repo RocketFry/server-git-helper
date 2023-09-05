@@ -209,6 +209,9 @@ case $command in
     "clone")
         clone_repo $3 $5
         ;;
+    "pull")
+        pull_repo $3 $5 $7
+        ;;
     *)
         echo "Invalid command."
         echo "Usage:"
