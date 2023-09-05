@@ -107,6 +107,22 @@ To fetch updates for an alias named `sgh-example`:
 
 - **Power & Responsibility**: The `exec` command is powerful and flexible. However, it comes with the responsibility of knowing what each Git command will do, as `sgh exec` does not have built-in safeguards against potentially destructive actions.
 
+#### To Update the `sgh` Utility
+
+To update, follow the same initial steps you used for installation. Typically, you can update `sgh` using `curl`, `wget`, or by manually copying the script again.
+
+**Example using `curl`:**
+
+```bash
+curl -o ~/sgh https://raw.githubusercontent.com/RocketFry/server-git-helper/main/sgh.sh
+```
+
+**Example using `wget`:**
+
+```bash
+wget -O ~/sgh https://raw.githubusercontent.com/RocketFry/server-git-helper/main/sgh.sh
+```
+
 ---
 
 And there you have it! You've now successfully set up SGH and can streamline your SSH key management across multiple Git repositories.
