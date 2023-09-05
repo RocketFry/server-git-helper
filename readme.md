@@ -89,6 +89,24 @@ Example:
 ~/sgh clean --alias sgh-example
 ```
 
+#### To Execute Raw Git Commands
+
+```bash
+~/sgh exec --alias [alias-name] [raw git commands]
+```
+
+**Usage Examples:**
+
+To fetch updates for an alias named `sgh-example`:
+
+```bash
+~/sgh exec --alias sgh-example fetch
+```
+
+**Important Notes:**
+
+- **Power & Responsibility**: The `exec` command is powerful and flexible. However, it comes with the responsibility of knowing what each Git command will do, as `sgh exec` does not have built-in safeguards against potentially destructive actions.
+
 ---
 
 And there you have it! You've now successfully set up SGH and can streamline your SSH key management across multiple Git repositories.

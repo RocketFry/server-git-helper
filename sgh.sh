@@ -187,6 +187,26 @@ pull_repo() {
 }
 
 
+# Run any git command with ssh profile
+run_git_command() {
+  alias_name=$1
+  shift 1  # Shift arguments to get rid of the alias_name
+
+  # Retrieve the repo URL from metadata using alias
+  repo_url=$(grep "^$alias_name=" $METADATA | cut -d= -f2)
+
+  if [ -z "$repo_url" ]; then
+    echo "Alias does not exist."
+    exit 1
+  fi
+
+  # Run the git command
+  git_command="GIT_SSH_COMMAND=\"ssh -i $ALIAS_DIR/$alias_name\" git $@"
+  eval $git_command
+}
+
+
+
 # Main execution
 command=$1
 
@@ -212,6 +232,9 @@ case $command in
     "pull")
         pull_repo $3 $5 $7
         ;;
+    "exec")
+        run_git_command $3 "${@:4}"
+        ;;
     *)
         echo "Invalid command."
         echo "Usage:"
@@ -222,5 +245,6 @@ case $command in
         echo "  ~/sgh publickey --alias [example-alias]"
         echo "  ~/sgh clone --alias [example-alias] --dir ./[directory]"
         echo "  ~/sgh pull --alias [example-alias] --branch [example-branch] --remote [example-origin]"
+        echo "  ~/sgh exec --alias [example-alias] [raw git commands]"
         ;;
 esac
