@@ -178,12 +178,12 @@ pull_repo() {
 
   # Check if --remote option is provided
   if [ -z "$remote_name" ]; then
-    echo "Origin not specified. Using 'origin' as default."
+    echo "Remote not specified. Using 'origin' as default."
     remote_name="origin"
   fi
 
   # Pull
-  GIT_SSH_COMMAND="ssh -i $ALIAS_DIR/$alias_name" git pull $origin_name $branch_name
+  GIT_SSH_COMMAND="ssh -i $ALIAS_DIR/$alias_name" git pull $remote_name $branch_name
 }
 
 
