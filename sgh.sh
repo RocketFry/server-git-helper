@@ -48,6 +48,14 @@ else
     SED_INPLACE="-i"
 fi
 
+
+# List all aliases
+list_aliases() {
+    echo "Aliases and associated repos:"
+    cat $METADATA
+}
+
+
 # Create SSH key
 create_ssh() {
     alias_name=$1
@@ -63,6 +71,7 @@ create_ssh() {
 
     echo "$alias_name=$repo_url" >> $METADATA
 }
+
 
 # Delete alias but keep SSH keys
 delete_alias() {
@@ -102,13 +111,23 @@ clean_alias() {
 # Show public key
 show_public_key() {
     alias_name=$1
+    if [ -z "$alias_name" ]; then
+        echo "Alias name is empty. Cannot proceed with showing public key."
+        return
+    fi
     cat "$ALIAS_DIR/$alias_name.pub"
 }
+
 
 # Clone repo
 clone_repo() {
   alias_name=$1
   dir=$2
+
+  if [ -z "$alias_name" ]; then
+    echo "Alias name is empty. Cannot proceed with cloning."
+    return
+  fi
 
   # Retrieve the repo URL from metadata using alias
   repo_url=$(grep "^$alias_name=" $METADATA | cut -d= -f2)
@@ -116,6 +135,12 @@ clone_repo() {
   if [ -z "$repo_url" ]; then
     echo "Alias does not exist."
     exit 1
+  fi
+
+  # Check if --dir option is provided
+  if [ -z "$dir" ]; then
+    echo "Directory not specified. Using current directory."
+    dir="."
   fi
 
   # Ensure directory exists
@@ -126,18 +151,54 @@ clone_repo() {
 }
 
 
-# List all aliases
-list_aliases() {
-    echo "Aliases and associated repos:"
-    cat $METADATA
+# Pull repo
+pull_repo() {
+  alias_name=$1
+  branch_name=$2
+  remote_name=$3
+
+  if [ -z "$alias_name" ]; then
+    echo "Alias name is empty. Cannot proceed with pulling."
+    return
+  fi
+
+  # Retrieve the repo URL from metadata using alias
+  repo_url=$(grep "^$alias_name=" $METADATA | cut -d= -f2)
+
+  if [ -z "$repo_url" ]; then
+    echo "Alias does not exist."
+    exit 1
+  fi
+
+  # Check if --branch option is provided
+  if [ -z "$branch_name" ]; then
+    echo "Branch not specified. Using 'main' as default."
+    branch_name="main"
+  fi
+
+  # Check if --remote option is provided
+  if [ -z "$remote_name" ]; then
+    echo "Origin not specified. Using 'origin' as default."
+    remote_name="origin"
+  fi
+
+  # Pull
+  GIT_SSH_COMMAND="ssh -i $ALIAS_DIR/$alias_name" git pull $origin_name $branch_name
 }
+
 
 # Main execution
 command=$1
 
 case $command in
+    "list")
+        list_aliases
+        ;;
     "create")
         create_ssh $3 $5
+        ;;
+    "publickey")
+        show_public_key $3
         ;;
     "delete")
         delete_alias $3
@@ -145,23 +206,18 @@ case $command in
     "clean")
         clean_alias $3
         ;;
-    "publickey")
-        show_public_key $3
-        ;;
     "clone")
         clone_repo $3 $5
-        ;;
-    "list")
-        list_aliases
         ;;
     *)
         echo "Invalid command."
         echo "Usage:"
-        echo "  sh sgh.sh create --alias project-alias --repo ssh://[url]"
-        echo "  sh sgh.sh delete --alias project-alias"
-        echo "  sh sgh.sh clean --alias project-alias"
-        echo "  sh sgh.sh publickey --alias project-alias"
-        echo "  sh sgh.sh clone --alias project-alias --dir ./[directory]"
-        echo "  sh sgh.sh list"
+        echo "  ~/sgh list"
+        echo "  ~/sgh create --alias [example-alias] --repo [url]"
+        echo "  ~/sgh delete --alias [example-alias]"
+        echo "  ~/sgh clean --alias [example-alias]"
+        echo "  ~/sgh publickey --alias [example-alias]"
+        echo "  ~/sgh clone --alias [example-alias] --dir ./[directory]"
+        echo "  ~/sgh pull --alias [example-alias] --branch [example-branch] --remote [example-origin]"
         ;;
 esac
