@@ -6,7 +6,7 @@ First of all, copy the sgh.sh into your /home directory and you are ready to go:
 
 1. Create a new SSH key and alias:
    ```bash
-   sh sgh.sh create --alias project-alias --repo ssh://git.example.com/path/to/repo.git
+   sh sgh.sh create --alias project-alias --repo git@github.com:RocketFry/server-git-helper.git
    ```
 
 2. Delete an alias (but not the repo):
